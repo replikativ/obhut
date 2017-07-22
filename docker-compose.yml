@@ -1,10 +1,14 @@
 version: '2'
+
 services:
+
   elasticsearch:
     image: elasticsearch
     ports:
       - "9300:9300"
       - "9200:9200"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
 
   kibana:
     image: kibana
@@ -13,3 +17,13 @@ services:
     depends_on:
       - elasticsearch
   
+  logstash:
+    image: logstash
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "5000:5000"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    depends_on:
+      - elasticsearch
