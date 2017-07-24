@@ -1,27 +1,30 @@
 version: '3.1'
 
 services:
-
   elasticsearch:
-    image: elasticsearch
+    build: elasticsearch/
     ports:
       - "9300:9300"
       - "9200:9200"
     volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./elasticsearch/data:/usr/share/elasticsearch/data
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
 
   kibana:
-    image: kibana
+    build: kibana/
+    volumes:
+      - ./kibana/config/:/usr/share/kibana/config
     ports:
       - "5601:5601"
     depends_on:
       - elasticsearch
   
   logstash:
-    image: logstash
+    build: logstash/
     volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ./logstash/pipeline:/usr/share/logstash/pipeline
     ports:
       - "5000:5000"
