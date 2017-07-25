@@ -2,14 +2,14 @@ FROM ubuntu:latest
 MAINTAINER Konrad Kühne konrad.kuehne@protonmail.com
 
 # update the APT cache
-WORKDIR /usr/src/app
-
 RUN apt-get update
-
 RUN apt-get upgrade -y
 
 # install and setup project dependencies
-RUN apt-get install -y wget ruby-dev bzip2 build-essential
+RUN apt-get install -y wget bzip2 software-properties-common openjdk-8-jre-headless
+
+# set java environment
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
 RUN mkdir -p /usr/src/app
 
@@ -23,9 +23,6 @@ RUN cd /usr/src/app && md5sum -c riemann-0.2.14.tar.bz2.md5
 # extract riemann
 RUN tar xvf /usr/src/app/riemann-0.2.14.tar.bz2 -C /usr/src/app
 
-# install riemann tools
-RUN gem install riemann-client riemann-tools riemann-dash
+WORKDIR /usr/src/app/riemann-0.2.14
 
-COPY start.sh /usr/src/app
-
-CMD ["sh", "start.sh"]
+CMD ["bin/riemann", "etc/riemann.config"]

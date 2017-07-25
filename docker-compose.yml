@@ -36,4 +36,15 @@ services:
   riemann:
     build: riemann/
     ports:
+      - "5555:5555"
+      - "5556:5556"
+      - "5557:5557"
+
+  riemann_tools:
+    build: riemann_tools/
+    volumes:
+      - ./riemann_tools/riemann_dash/config.rb:/usr/app/riemann_dash/config.rb
+    ports:
       - "5678:5678"
+    depends_on:
+      - riemann
