@@ -32,3 +32,8 @@ services:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     depends_on:
       - elasticsearch
+
+  riemann:
+    build: riemann/
+    ports:
+      - "5678:5678"
