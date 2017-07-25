@@ -35,16 +35,37 @@ services:
 
   riemann:
     build: riemann/
+    networks:
+      - riemann
+    container_name: riemann-server
     ports:
-      - "5555:5555"
-      - "5556:5556"
-      - "5557:5557"
+      - "127.0.0.1:5556:5556"
+    restart: always
 
-  riemann_tools:
-    build: riemann_tools/
+  riemann_health:
+    build: riemann_health/
+    pid: host
+    environment:
+      - "affinity:container!=*riemannhealth*"
     volumes:
-      - ./riemann_tools/riemann_dash/config.rb:/usr/app/riemann_dash/config.rb
-    ports:
-      - "5678:5678"
+      - "/etc/hostname:/etc/hostname:ro"
+    networks:
+      - riemann
     depends_on:
       - riemann
+
+
+  riemann_dash:
+    build: riemann_dash/
+    networks:
+      - riemann
+    volumes:
+      - ./riemann_dash/config.rb:/usr/app/riemann_dash/config.rb
+    ports:
+      - "127.0.0.1:4567:4567"
+    depends_on:
+      - riemann
+
+networks:
+  riemann:
+    driver: bridge

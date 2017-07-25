@@ -25,4 +25,6 @@ RUN tar xvf /usr/src/app/riemann-0.2.14.tar.bz2 -C /usr/src/app
 
 WORKDIR /usr/src/app/riemann-0.2.14
 
-CMD ["bin/riemann", "etc/riemann.config"]
+COPY server.config /usr/src/app/riemann-0.2.14
+
+CMD ["bin/riemann", "server.config"]
