@@ -9,6 +9,8 @@ services:
       - logstash:logstash
       - kibana:kibana
     restart: always
+    networks:
+      - core
       
   elasticsearch:
     build: elasticsearch/
@@ -18,6 +20,8 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     restart: always
+    networks:
+      - core
 
   kibana:
     build: kibana/
@@ -26,6 +30,8 @@ services:
     depends_on:
       - elasticsearch
     restart: always
+    networks:
+      - core
   
   logstash:
     build: logstash/
@@ -36,4 +42,10 @@ services:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     depends_on:
       - elasticsearch
+    networks:
+      - core
     restart: always
+
+networks:
+  core:
+    driver: bridge
